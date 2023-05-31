@@ -122,6 +122,11 @@ namespace LaMiaPizzeriaNuova.Controllers
 
 
         }
+        [HttpGet]
+        public IActionResult Detail(int Id)
+        {
+            return View();
+        }
 
     }
 

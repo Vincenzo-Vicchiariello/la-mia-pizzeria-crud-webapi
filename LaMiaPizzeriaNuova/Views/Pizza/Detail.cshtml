@@ -1,0 +1,34 @@
+﻿<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+            <div id="palle2">
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts{
+    const url = window.location.href;
+        const indexOfLastSlash = url.lastIndexOf('/');
+        const id = url.substring(indexOfLastSlash + 1);
+
+            axios.get('/api/pizzaAPI/SearchById/' + id).then((result) => {
+            const pizza = result.data;
+            debugger; 
+                        document.getElementById("palle2").innerHTML += `
+    <div class="card mt-5">
+            <img  src=${pizza.imgSource} class="card-img-top " alt="...">
+            <div class="card-body">
+                <h5 class="card-title">${pizza.name}</h5>
+                <p class="card-text">${pizza.description} <br />
+                    ${pizza.price}"€"</p>
+            </div>
+        </div>
+   
+            `
+        }).catch((error) => {
+            console.error("Errore!");
+            console.log(error);
+        });
+}

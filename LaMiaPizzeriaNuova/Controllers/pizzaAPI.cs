@@ -1,6 +1,7 @@
 ﻿using LaMiaPizzeriaNuova.DataBase;
 using LaMiaPizzeriaNuova.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LaMiaPizzeriaNuova.Controllers
 {
@@ -19,12 +20,13 @@ namespace LaMiaPizzeriaNuova.Controllers
 
 
         }
-        [HttpGet("{Name}")]
+        [HttpGet]
         public IActionResult SearchByName(string name)
         {
             using (PizzaContext context = new PizzaContext())
             {
-                PizzaModel? pizzaName = context.Pizze.Where(pizza => pizza.Name.Contains("name")).FirstOrDefault();
+                PizzaModel? pizzaName = context.Pizze.Where(pizza => pizza.Name.Contains(name)).Include(pizza => pizza.PizzaCategory).FirstOrDefault();
+                pizzaName.PizzaCategory.Pizze = new List<PizzaModel>();
                 if (pizzaName != null)
                 {
                     return Ok(pizzaName);
@@ -33,6 +35,22 @@ namespace LaMiaPizzeriaNuova.Controllers
             }
 
         }
+        [HttpGet("{id}")]
+        public IActionResult SearchById(int id)
+        {
+            using (var db = new PizzaContext())
+            {
+                PizzaModel? pizzaIdToSearch = db.Pizze.Where(pizza => pizza.Id == id).FirstOrDefault();
+                if (pizzaIdToSearch != null)
+                {
+                    return Ok(pizzaIdToSearch);
+                }
+                return NotFound();
+            }
+        }
+
+
+
 
     }
 }
